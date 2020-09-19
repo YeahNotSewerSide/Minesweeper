@@ -6,9 +6,9 @@ import asyncio
 
 import Resources
 
-COMMANDS_PREFIX = '!'
+COMMANDS_PREFIX = '/'
 
-ALLOWED_CHANNELS_IDS = []
+ALLOWED_CHANNELS_IDS = [756959527919943680]
 ACTIVE_GAMES = {} #'channel.id':game
  
 '''
@@ -23,8 +23,15 @@ lock = asyncio.Lock()
 
 async def send_pole_rendered(channel,rendered):
     lines = rendered.split('\n')
+
+    max_len = 0
+    for line in lines:
+        if len(line) > max_len:
+            max_len = len(line)
+    
+
     await lock.acquire()
-    banch = 2000//(len(lines[2])+len(lines[3])+2)
+    banch = 2000//(max_len*2 + 2)
     if banch >= len(lines):
         banch = len(lines)
     
@@ -46,7 +53,7 @@ async def process_message(message):
     channel_id = str(message.channel.id)
     if message.content[0] == COMMANDS_PREFIX: #is command
         args = message.content.split(' ')
-        if args[0] == '!start_game':
+        if args[0] == f'{COMMANDS_PREFIX}start_game':
             game_exists = False
             
             res = ACTIVE_GAMES.get(channel_id,False)
@@ -131,7 +138,7 @@ async def process_message(message):
             await task
             return
                
-        elif args[0] == '!end_game':
+        elif args[0] == f'{COMMANDS_PREFIX}end_game':
             try:
                 ACTIVE_GAMES[channel_id]
             except:
@@ -146,7 +153,7 @@ async def process_message(message):
             del ACTIVE_GAMES[channel_id]
             lock.release()
 
-        elif args[0] == '!open':
+        elif args[0] == f'{COMMANDS_PREFIX}open' or args[0] == f'{COMMANDS_PREFIX}o':
             try:
                 ACTIVE_GAMES[channel_id]
             except:
@@ -189,7 +196,7 @@ async def process_message(message):
                 lock.release()
                 del ACTIVE_GAMES[channel_id]
         
-        elif args[0] == '!put_flag':
+        elif args[0] == f'{COMMANDS_PREFIX}put_flag' or args[0] == f'{COMMANDS_PREFIX}pf':
             try:
                 ACTIVE_GAMES[channel_id]
             except:
@@ -231,7 +238,7 @@ async def process_message(message):
                 lock.release()
                 del ACTIVE_GAMES[channel_id]
         
-        elif args[0] == '!remove_flag':
+        elif args[0] == f'{COMMANDS_PREFIX}remove_flag' or args[0] == f'{COMMANDS_PREFIX}rf':
             try:
                 ACTIVE_GAMES[channel_id]
             except:
@@ -261,7 +268,7 @@ async def process_message(message):
             if not res:
                 return
 
-        elif args[0] == '!help':
+        elif args[0] == f'{COMMANDS_PREFIX}help':
             await lock.acquire()
             await message.channel.send(Resources.HELP+'\n'+Resources.HELP_START)      
             lock.release()
