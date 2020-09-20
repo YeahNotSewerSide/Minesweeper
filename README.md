@@ -17,8 +17,8 @@ DiscordSaper.py - discord bot(there you can add ALLOWED_CHANNELS_IDS and change 
 
 !end_game - end game
 
-!open x y
+!open x y / !o
 
-!put_flag x y
+!put_flag x y / !pf
 
-!remove_flag x y
+!remove_flag x y / !rf
