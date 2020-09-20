@@ -60,11 +60,14 @@ class game:
             
         self.mistakes = 0
 
+        self.last_messages = []
+
 
     def update_time(self):
         self.last_change = time.time()
 
-
+    def new_message(self,ids):
+        self.last_messages = ids
 
     def check_size(self,size)->bool:
         if (size[0]<MIN_SIZE[0] or size[0]>MAX_SIZE[0]) or (size[1]<MIN_SIZE[1] or size[1]>MAX_SIZE[1]):
@@ -190,7 +193,7 @@ class game:
 
     def render_to_emodji(self):
         to_return = ''
-        to_return += 'Time: '+str((time.time()-self.started)/60)+'\nFlags left:'+str(self.available_flags)+'\n'
+        to_return += 'Time(minutes): '+str(round((time.time()-self.started)/60,2))+'\nFlags left:'+str(self.available_flags)+'\n'
         
         for i in range(self.size[0]+1):
             to_return += str(i)+' '*Resources.margins_x[i]

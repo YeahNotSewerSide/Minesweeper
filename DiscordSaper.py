@@ -29,7 +29,7 @@ async def send_pole_rendered(channel,rendered):
         if len(line) > max_len:
             max_len = len(line)
     
-
+    to_return = []
     await lock.acquire()
     banch = 2000//(max_len*2 + 2)
     if banch >= len(lines):
@@ -44,9 +44,16 @@ async def send_pole_rendered(channel,rendered):
                 break
 
         if message != '':
-            await channel.send(message)
+            msg = await channel.send(message)
+            to_return.append(msg.id)
     
     lock.release()
+    for id in ACTIVE_GAMES[str(channel.id)].last_messages:
+        msg = await channel.fetch_message(id)
+        await msg.delete()
+
+    ACTIVE_GAMES[str(channel.id)].new_message(to_return)
+    #return to_return
 
 
 async def process_message(message):
@@ -75,10 +82,12 @@ async def process_message(message):
 
             if len(args) == 1:
                 ACTIVE_GAMES[channel_id] = game(message.author.id)
+                #ACTIVE_GAMES[channel_id].new_message(message.id)
                 ACTIVE_GAMES[channel_id].generate_map()
                 rendered = ACTIVE_GAMES[channel_id].render_to_emodji()
                 task = asyncio.create_task(send_pole_rendered(message.channel,rendered))
                 await task
+                #ACTIVE_GAMES[channel_id].new_message(ids)
                 return
 
             private = False
@@ -131,11 +140,14 @@ async def process_message(message):
                         lock.release()
                         return
 
+            #gm.new_message(message.id)
+
             ACTIVE_GAMES[channel_id] = gm
             ACTIVE_GAMES[channel_id].generate_map()
             rendered = ACTIVE_GAMES[channel_id].render_to_emodji()
             task = asyncio.create_task(send_pole_rendered(message.channel,rendered))
             await task
+            #ACTIVE_GAMES[channel_id].new_message(ids)
             return
                
         elif args[0] == f'{COMMANDS_PREFIX}end_game':
@@ -150,7 +162,13 @@ async def process_message(message):
             if ACTIVE_GAMES[channel_id].user_id != message.author.id:
                 return
             await message.channel.send(Resources.GAME_ENDED)
+
+            #for id in ACTIVE_GAMES[channel_id].messages[:len(ACTIVE_GAMES[channel_id].messages)-1]:
+            #    msg = await message.channel.fetch_message(id)
+            #    await msg.delete()
+
             del ACTIVE_GAMES[channel_id]
+            
             lock.release()
 
         elif args[0] == f'{COMMANDS_PREFIX}open' or args[0] == f'{COMMANDS_PREFIX}o':
@@ -177,10 +195,19 @@ async def process_message(message):
                 lock.release()
                 return
 
+            
 
             res = ACTIVE_GAMES[channel_id].open_tile(position)
             rendered = ACTIVE_GAMES[channel_id].render_to_emodji()
+
             await send_pole_rendered(message.channel,rendered)
+
+            #for id in ACTIVE_GAMES[channel_id].last_messages:
+            #    msg = await message.channel.fetch_message(id)
+            #    await msg.delete()
+
+            #ACTIVE_GAMES[channel_id].new_message(ids)
+
             if not res:
                 return
             if ACTIVE_GAMES[channel_id].is_alive():
@@ -222,7 +249,17 @@ async def process_message(message):
 
             res = ACTIVE_GAMES[channel_id].put_flag(position)
             rendered = ACTIVE_GAMES[channel_id].render_to_emodji()
+
             await send_pole_rendered(message.channel,rendered)
+
+            #for id in ACTIVE_GAMES[channel_id].last_messages:
+            #    msg = await message.channel.fetch_message(id)
+            #    await msg.delete()
+
+            #ACTIVE_GAMES[channel_id].new_message(ids)
+
+
+
             if not res:
                 return
             if ACTIVE_GAMES[channel_id].is_alive():
@@ -264,7 +301,20 @@ async def process_message(message):
 
             res = ACTIVE_GAMES[channel_id].remove_flag(position)
             rendered = ACTIVE_GAMES[channel_id].render_to_emodji()
+
+
+
             await send_pole_rendered(message.channel,rendered)
+
+            #for id in ACTIVE_GAMES[channel_id].last_messages:
+            #    msg = await message.channel.fetch_message(id)
+            #    await msg.delete()
+
+            #ACTIVE_GAMES[channel_id].new_message(ids)
+
+
+
+
             if not res:
                 return
 
