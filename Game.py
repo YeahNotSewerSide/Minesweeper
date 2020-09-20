@@ -67,7 +67,9 @@ class game:
         self.last_change = time.time()
 
     def new_message(self,ids):
-        self.last_messages = ids
+        for id in ids:
+            self.last_messages.append(id)
+        #self.last_messages = ids
 
     def check_size(self,size)->bool:
         if (size[0]<MIN_SIZE[0] or size[0]>MAX_SIZE[0]) or (size[1]<MIN_SIZE[1] or size[1]>MAX_SIZE[1]):
@@ -170,6 +172,8 @@ class game:
                         
                         if self.flags[y][x]:
                             self.flags[y][x] = False
+                            self.pole_opened[y][x] = False
+                            self.available_flags += 1
 
                         if self.pole[pos[1]][pos[0]] == 0:
                             self.make_visible((x,y))
@@ -181,10 +185,11 @@ class game:
                             break
                         else:
                             continue
-                    elif self.visible((x,y)):
-                        if self.flags[y][x]:
-                            self.flags[y][x] = False
-                            self.available_flags += 1
+                    #elif self.visible((x,y)):
+                    #    if self.flags[y][x]:
+                    #        self.flags[y][x] = False
+                    #        self.pole_opened[y][x] = False
+                    #        self.available_flags += 1
                 if br:
                     break
 
