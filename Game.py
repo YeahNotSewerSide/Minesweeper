@@ -11,7 +11,7 @@ import Resources
 MAX_MISTAKES = 5
 AFK_TIME = 180
 
-MAX_SIZE = (67,36)
+MAX_SIZE = (62,33)
 MIN_SIZE = (5,5)
 
 MAX_MISTAKES = 5
@@ -191,15 +191,30 @@ class game:
     def render_to_emodji(self):
         to_return = ''
         to_return += 'Time: '+str((time.time()-self.started)/60)+'\nFlags left:'+str(self.available_flags)+'\n'
-        for y in range(0,self.size[1]):
+        
+        for i in range(self.size[0]+1):
+            to_return += str(i)+' '*Resources.margins_x[i]
+        to_return += '\n'
+
+        first = True
+
+        for y in range(1,self.size[1]+1):
+            _y = y % 10
+            
+            to_return += str(_y)
+
+            if _y == 1:
+                to_return += ' '
+                        
             for x in range(0,self.size[0]):
-                if self.pole_opened[y][x]:
-                    if self.pole[y][x] == -1 and not self.flags[y][x]:
+                actual_y = y - 1
+                if self.pole_opened[actual_y][x]:
+                    if self.pole[actual_y][x] == -1 and not self.flags[actual_y][x]:
                         to_return += Resources.BOMB
-                    elif self.flags[y][x]:
+                    elif self.flags[actual_y][x]:
                         to_return += Resources.FLAG
                     else:
-                        to_return += Resources.NUMBERS[self.pole[y][x]]
+                        to_return += Resources.NUMBERS[self.pole[actual_y][x]]
                 else:
                     to_return += Resources.UNOPENED
             to_return += '\n'

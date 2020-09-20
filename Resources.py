@@ -4,7 +4,7 @@ NO_ACTIVE_GAMES = "There is no active games in this channel"
 
 XY = 'Must be inputed two values! X and Y!'
 
-HELP = "!help - help\n!start_game public/private 10X10 5\n!end_game\n!open x y\n!put_flag x y\n!remove_flag x y"
+HELP = "/help - help\n/start_game public/private 10X10 5\n/end_game\n/open x y\n/put_flag x y\n/remove_flag x y"
 
 WIN = 'YOU WON!'
 
@@ -12,7 +12,7 @@ GAMEOVER = 'Your game ended!'
 
 GAME_ENDED = "Game was ended!"
 
-HELP_START = "!start_game private 10X10 10\nprivate\public 10X10 - size 10 - number of bombs"
+HELP_START = "/start_game private 10X10 10\nprivate\public 10X10 - size 10 - number of bombs"
 
 API_KEY = ''
 
@@ -35,3 +35,11 @@ NUMBERS = [':zero:',
            ':seven:',
            ':eight:',
            ':nine:']
+
+margins_x = (2,4,4,4,3,4,4,3,4,3,
+           2,2,2,2,2,2,2,2,2,2,
+           2,2,1,1,2,1,1,2,1,1,
+           1,2,1,2,1,1,2,1,1,1,
+           2,1,1,1,1,1,1,1,1,1,
+           2,2,1,1,2,1,1,1,2,1,
+           1,1,0) #62
