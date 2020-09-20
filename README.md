@@ -1,5 +1,5 @@
 # Sapper
-Discord bot with game Sapper
+Discord bot with classic game Minesweeper
 
 
 In file Resources.py you can change API_KEY and BOT_ID
