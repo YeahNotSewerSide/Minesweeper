@@ -8,6 +8,8 @@ Game.py - file with actual game
 
 DiscordSaper.py - discord bot(there you can add ALLOWED_CHANNELS_IDS and change COMMANDS_PREFIX)
 
+If ALLOWED_CHANNELS_IDS = [] then bot will answer to all channels
+
 
 # COMMANDS
 
