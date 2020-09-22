@@ -10,6 +10,8 @@ DiscordSaper.py - discord bot(there you can add ALLOWED_CHANNELS_IDS and change 
 
 If ALLOWED_CHANNELS_IDS = [] then bot will answer to all channels
 
+76816 - permissions for the bot
+
 
 # COMMANDS
 
