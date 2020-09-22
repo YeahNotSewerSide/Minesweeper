@@ -16,6 +16,8 @@ MIN_SIZE = (5,5)
 
 MAX_MISTAKES = 5
 
+UNLUCKY = 2
+
 '''
 0-empty
 1,2,3,... - not empty
@@ -95,13 +97,42 @@ class game:
 
         return weight
 
+    def get_limits(self,quarter):
+        half_y = (self.size[1]//2)
+        half_x = (self.size[0]//2)
+
+        to_return = ()
+
+        if quarter == 0:
+            to_return = (0,half_x,0,half_y)
+        elif quarter == 1:       
+            to_return = (half_x,self.size[0]-1,0,self.size[1]-1)
+
+        elif quarter == 2:
+            to_return = (half_x,self.size[0]-1,half_y,self.size[1]-1)
+
+
+        elif quarter == 3:
+            to_return = (0,half_x,half_y,self.size[1]-1)
+
+        return to_return
+        
+
     def generate_map(self):
+        quarter = 0
         for i in range(self.number_of_bombs):
-            x = random.randint(0,self.size[0]-1)
-            y = random.randint(0,self.size[1]-1)
-            while self.pole[y][x] == -1:
-                x = random.randint(0,self.size[0]-1)
-                y = random.randint(0,self.size[1]-1)
+            limits = self.get_limits(quarter)
+            quarter += 1
+            if quarter == 4:
+                quarter = 0
+
+            x = random.randint(limits[0],limits[1])
+            y = random.randint(limits[2],limits[3])
+            #x = random.randint(0,self.size[0]-1)
+            #y = random.randint(0,self.size[1]-1)
+            while self.pole[y][x] == -1 or self.get_weight((x,y))>=UNLUCKY:
+                x = random.randint(limits[0],limits[1])
+                y = random.randint(limits[2],limits[3])
             self.pole[y][x] = -1
 
         for y in range(self.size[1]):
@@ -185,11 +216,6 @@ class game:
                             break
                         else:
                             continue
-                    #elif self.visible((x,y)):
-                    #    if self.flags[y][x]:
-                    #        self.flags[y][x] = False
-                    #        self.pole_opened[y][x] = False
-                    #        self.available_flags += 1
                 if br:
                     break
 
