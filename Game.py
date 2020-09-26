@@ -83,6 +83,13 @@ class game:
             return True
         return False
 
+    def is_bomb_(self,x,y):
+        if x<0 or x>=self.size[0] or y<0 or y>=self.size[1]:
+            return False
+        if self.pole[y][x] == -1:
+            return True
+        return False
+
     def get_weight(self,position:tuple):
 
         weight = 0
@@ -130,9 +137,14 @@ class game:
             y = random.randint(limits[2],limits[3])
             #x = random.randint(0,self.size[0]-1)
             #y = random.randint(0,self.size[1]-1)
-            while self.pole[y][x] == -1 or self.get_weight((x,y))>=UNLUCKY:
+            while self.pole[y][x] == -1: #or self.get_weight((x,y))>UNLUCKY:
                 x = random.randint(limits[0],limits[1])
                 y = random.randint(limits[2],limits[3])
+                if self.get_weight((x,y))<=UNLUCKY:
+                    if (self.is_bomb_(x-1,y) and self.is_bomb_(x-2,y))or (self.is_bomb_(x-1,y) and self.is_bomb_(x+1,y)) or (self.is_bomb_(x+1,y) and self.is_bomb_(x+2,y)) or (self.is_bomb_(x,y-1) and self.is_bomb_(x,y-2)) or (self.is_bomb_(x,y-1) and self.is_bomb_(x,y+1)) or (self.is_bomb_(x,y+1) and self.is_bomb_(x,y+2)):
+                        continue
+                    break
+                
             self.pole[y][x] = -1
 
         for y in range(self.size[1]):
